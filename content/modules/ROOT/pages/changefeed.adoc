@@ -1,0 +1,174 @@
+## CockroachDB and Kafka
+CockroachDB is capable of acting as a Kafka producer that publishes messages to
+Kafka topics in relation to database events. As this lab uses the CockroachDB
+Cloud, you will need to configure the Kafka (running in the OpenShift cluster)
+to allow external, authenticated communication.
+
+## Configuring Kafka for External Communication
+When the lab environment was set up, the Kafka cluster was exposed externally
+via an OpenShift Route. The route was secured using TLS encryption and
+communicates as HTTPS over port 443 (the default).
+
+To get the route for the Kafka bootstrap cluster, you have two options.
+
+### Option 1: OpenShift GUI
+. Click the _Project_ dropdown at the top of the _Topology_ area and choose the `crdb-kafka` project
+. Click _Project_ in the left-hand navigation
+. Click _Routes_ in the _Inventory_ area
+. Find the _Location_ for the route called `crdb-cluster-kafka-external-bootstrap`
+
+### Option 2: OpenShift CLI
+The following command will get the route information:
+
+[source,bash,role=execute]
+----
+oc get route crdb-cluster-kafka-external-bootstrap -n crdb-kafka
+----
+
+Because the URL is so long, the line wrapping makes things look a little messy.
+The important details are the following:
+
+* the hostname, which ends in .com in our case
+* the termination type, which is _passthrough_, meaning that the HAProxy load
+balancer handling the external connections to OpenShift will pass the TLS
+connection through to the endpoint (Kafka, in this case) without re-encrypting
+or de-encrypting
+
+## Obtaining the TLS certificate
+CockroachDB, like most TLS-enabled applications, needs the certificate in order
+to properly communicate. 
+
+While you could also find the certificate by digging in the OpenShift web
+console, it's fairly quick to do it via the CLI:
+
+[source,bash,role=execute]
+----
+oc describe kafka crdb-cluster -n crdb-kafka
+----
+
+You will see something like:
+
+----
+Name:         crdb-cluster
+Namespace:    crdb-kafka
+Labels:       <none>
+Annotations:  <none>
+API Version:  kafka.strimzi.io/v1beta2
+...
+...
+    Certificates:
+      -----BEGIN CERTIFICATE-----
+MIIFLTCCAxWgAwIBAgIUcFEfRknbqi5qbQnelpfNjKEQV4cwDQYJKoZIhvcNAQEN
+...
+----
+
+## Set up the CockroachDB changefeed
+Setting up the changefeed for your CockroachDB Cloud instance to talk to the
+Kafka broker is as easy as an SQL command. Fortunately, we have provided a small
+bash script that will save you the trouble of lots of copying and pasting:
+
+[source,bash,role=execute]
+----
+cat ~/assets/cockroach-changefeed.sh
+----
+
+When you run the above scriptlet, the route and certificate details will be
+fetched and then passed to the CockroachDB CLI. Just copy and paste the password
+shown.
+
+[source,bash,role=execute]
+----
+bash ~/assets/cockroach-changefeed.sh
+----
+
+If successful, you should see something like:
+
+[source]
+----
+Use this password: i33$ylgU7azN
+Connecting to server "free-tier14.aws-us-east-1.cockroachlabs.cloud:26257" as user "user1_eda.user1_db_a8375c8343".
+Enter password:
+        job_id
+----------------------
+  860339889937547265
+(1 row)
+
+
+Time: 127ms
+
+NOTICE: changefeed will emit to topic user1-table-changes
+----
+
+## Verify the CockroachDB changefeed
+Even though the above output is pretty clear about whether or not is successful,
+you can additionally verify the changefeed with an SQL command. Reconnect to the
+database using the service binding test script:
+
+[source,bash,role=execute]
+----
+bash ~/assets/test-service-binding.sh
+----
+
+Once connected, the following SQL will tell you the status of any changefeed
+configuration:
+
+[source,sql,role=execute]
+----
+show changefeed jobs;
+----
+
+Somewhere buried in that output you should see:
+
+[source]
+----
+CREATE CHANGEFEED FOR TABLE
+----
+
+Exit the CockroachDB client:
+
+[source,sql,role=execute]
+----
+quit
+----
+
+## Test the CockroachDB changefeed with the Fruit app
+Make sure you have the Python consumer application's logs showing:
+
+. In the OpenShift web console, ensure you are using the _Developer_ perspective
+. Make sure that you are in the _Topology_ view
+. Select your `%user%-eda` project from the dropdown at the top
+. Click the Python consumer application pod
+. Click the pod name in the right hand navigation, which looks like
+`python-kafka-consumer-696d6fbfbb-cfxw8`
+. Click the _Logs_ tab
+
+You will want to open another browser window into the OpenShift console to find
+the Fruit application's route.
+
+Alternatively, you could watch the Python consumer application's logs via the
+OpenShift command line:
+
+[source,bash,role=execute]
+----
+oc logs -f `oc get pod -l app=python-kafka-consumer -o jsonpath='{.items[0].metadata.name}'`
+----
+
+[NOTE]
+You could have simply done an `oc get pod` to determine the name of the
+consumer's pod, and then done `oc logs -f <podname>` - but the scriptlet is more
+convenient!
+
+Return to the Fruit application by clicking its route button in the _Topology_
+view of your project:
+
+Manipulate some fruit, and then watch the Python consumer application. You
+should see that changes are flowing through to it via Kafka! If you created
+_Strawberries_ with a quantity of _6_, you might see:
+
+[source]
+----
+Received message: {"after": {"description": null, "id": "6e154890-764e-449b-b6d0-f57216c908d9", "name": "Strawberries", "quantity": "6"}}
+----
+
+Press `Ctrl-C` to stop watching the logs if you chose to do so in the terminal
+window.
