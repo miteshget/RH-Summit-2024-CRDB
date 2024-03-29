@@ -1,7 +1,5 @@
-* xref:module-01.adoc[1. RPM Native Container]
-** xref:module-01.adoc#repositories[Repositories]
-** xref:module-01.adoc#software[Software]
-
-* xref:module-02.adoc[2. GitHub Sourced Container]
-** xref:module-02.adoc#prerequisites[Install Prerequisites]
-** xref:module-02.adoc#container[Enable Container]
+* xref:overview.adoc[1. Overview]
+** xref:setup.adoc#repositories[Module 1: Setting up the Application with CockroachDB]
+** xref:kafka.adoc#software[Module 2: Setting up Kafka]
+** xref:changefeed.adoc#prerequisites[Module 3: Configuring the Changefeed]
+** xref:edamicro.adoc#container[Module 3: EDA Micro]
