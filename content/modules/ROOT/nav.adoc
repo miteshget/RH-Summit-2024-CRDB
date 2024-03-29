@@ -2,4 +2,4 @@
 ** xref:setup.adoc#repositories[Module 1: Setting up the Application with CockroachDB]
 ** xref:kafka.adoc#software[Module 2: Setting up Kafka]
 ** xref:changefeed.adoc#prerequisites[Module 3: Configuring the Changefeed]
-** xref:edamicro.adoc#container[Module 3: EDA Micro]
+** xref:content/modules/ROOT/pages/edamicro.adoc#container[Module 3: EDA Micro]
