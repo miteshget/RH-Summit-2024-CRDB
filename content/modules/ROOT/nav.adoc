@@ -3,3 +3,5 @@
 ** xref:pages/kafka.adoc#software[Module 2: Setting up Kafka]
 ** xref:pages/changefeed.adoc#prerequisites[Module 3: Configuring the Changefeed]
 ** xref:pages/edamicro.adoc#container[Module 4: Setup OpenShift Pipelines]
+
+* xref:variables-guide-delete-me.adoc[Variable Guide (Delete Me)]

@@ -1,0 +1,43 @@
+= Variables Guide
+
+
+
+This page lists the variables you can use when making instructions.
+
+IMPORTANT: Once the showroom guide is created, please delete the file and remove the *xref : variable-guide-delete-me.adoc [Variable Guide (Delete Me)]*  line from *content/modules/ROOT/nav.adoc* file. 
+
+
+
+== List of Variables
+****
+
+.Variables from Catalog Item
+[%autowidth,cols="^.^,^.^a,^.^a",options="header"]
+|===
+|SR No.| Variable Name| Variable Value
+|{counter:node} | openshift_console_url | {openshift_console_url}
+|{counter:node} |user_namespace | {user_namespace}
+|{counter:node} |user | {user}
+|{counter:node} | password | {password}
+|{counter:node} |gitea_console_url | {gitea_console_url}
+|{counter:node} |gitea_admin_username | {gitea_admin_username}
+|{counter:node} |gitea_admin_password | {gitea_admin_password}
+|{counter:node} |bastion_public_hostname | {bastion_public_hostname}
+|{counter:node} |bastion_ssh_port | {bastion_ssh_port}
+|{counter:node} |bastion_ssh_password | {bastion_ssh_password}
+|{counter:node} |bastion_ssh_user_name | {bastion_ssh_user_name}
+|{counter:node} |showroom_primary_view_url | {showroom_primary_view_url}
+|===
+****
+
+
+
+== How to Use
+
+To utilize variables, enclose them within curly brackets. For instance, use *{variable_name}* to incorporate variables into your instructions.
+
+== AsciiDoc References
+
+. https://powerman.name/doc/asciidoc[AsciiDoc cheatsheet,window=_blank]
+. https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/[AsciiDoc Syntax Quick Reference,window=_blank]
+. https://docs.antora.org/antora/latest/asciidoc/asciidoc/[Antora AsciiDoc,window=_blank]
