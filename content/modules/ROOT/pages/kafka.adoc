@@ -25,7 +25,7 @@ the YAML before passing it to `oc`:
 +
 [source,yaml,role=execute]
 ----
-sed 's/userX/%user%/' ~/assets/kafkatopic.yaml | oc create -f -
+sed 's/userX/{user}/' ~/assets/kafkatopic.yaml | oc create -f -
 ----
 
 ## Test the Kafka Topic
@@ -55,7 +55,7 @@ with the value:
 +
 [source,role=copy]
 ----
-%user%-table-changes
+{user}-table-changes
 ----
 
 * Click the blue _Create_ button. 
@@ -95,7 +95,7 @@ with the value:
 +
 [source,role=copy]
 ----
-%user%-table-changes
+{user}-table-changes
 ----
 
 * Click the blue _Create_ button. 
