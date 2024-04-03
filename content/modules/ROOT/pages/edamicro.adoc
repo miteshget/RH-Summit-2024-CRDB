@@ -4,27 +4,27 @@ running inside the cluster. You can access it at the following URL:
 
 [source,role=copy]
 ----
-%gitea_console_url%
+{gitea_console_url}
 ----
 
 Your Gitea username is:
 
 [source,role=copy]
 ----
-%gitea_user%
+{gitea_user}
 ----
 
 And the password is:
 
 [source,role=copy]
 ----
-%gitea_password%
+{gitea_password}
 ----
 
 Sign in to Gitea clicking the link at the upper-right.
 
 When you sign in to Gitea, you will see that you already have a repository
-staged for you, called `%user%/cockroach-kafka-eda`. Click into it now.
+staged for you, called `{user}/cockroach-kafka-eda`. Click into it now.
 
 In preparation to do some light coding and process some Kubernetes/OpenShift
 manifests, it will be necessary to clone this repository:
@@ -32,9 +32,9 @@ manifests, it will be necessary to clone this repository:
 [source,bash,role=execute]
 ----
 cd ~;\
-git clone %gitea_console_url%/%user%/cockroach-kafka-eda;\
+git clone {gitea_console_url}/{user}/cockroach-kafka-eda;\
 cd ~/cockroach-kafka-eda
-oc project %user%-eda
+oc project {user}-eda
 ----
 
 ## OpenShift Pipelines and Pipeline resources
@@ -62,7 +62,7 @@ If you get an "already exists" error, it might mean you just executed the create
 command twice. No worries!
 
 . Now, go back to the OpenShift web console, making sure you are using the
-`%user%-eda` project
+`{user}-eda` project
 . In the left-hand navigation, choose the _Administrator_ perspective at the
 top.
 . In the left-hand navigation, Click _Pipelines_
@@ -96,13 +96,13 @@ tkn pipeline start build-and-deploy-ms \
 -w name=shared-workspace,volumeClaimTemplateFile=pipelines/pipelinepvc.yaml \
 -p deployment-name-p=eda-producer-ms-ep \
 -p deployment-name-c=eda-consumer-ms-ep \
--p git-url=%gitea_console_url%/%user%/cockroach-kafka-eda.git \
+-p git-url={gitea_console_url}/{user}/cockroach-kafka-eda.git \
 -p IMAGE-P=image-registry.openshift-image-registry.svc:5000/%user%-eda/eda-ms-producer \
 -p IMAGE-C=image-registry.openshift-image-registry.svc:5000/%user%-eda/eda-ms-consumer \
 -p KAFKA_BROKER='crdb-cluster-kafka-bootstrap.crdb-kafka.svc.cluster.local:9092' \
--p KAFKA_GROUP_ID=%user%-groupid \
--p KAFKA_TOPIC=%user%-topic \
--p KAFKA_CLIENT_ID=%user%-clientid \
+-p KAFKA_GROUP_ID={user}-groupid \
+-p KAFKA_TOPIC={user}-topic \
+-p KAFKA_CLIENT_ID={user}-clientid \
 --use-param-defaults
 ----
 
@@ -139,8 +139,8 @@ you built and deployed with the pipeline:
 
 [source,bash,role=execute]
 ----
-oc create route edge --service=eda-consumer-ms-ep-svc -n %user%-eda
-oc create route edge --service=eda-producer-ms-ep-svc -n %user%-eda
+oc create route edge --service=eda-consumer-ms-ep-svc -n {user}-eda
+oc create route edge --service=eda-producer-ms-ep-svc -n {user}-eda
 ----
 
 You will see output like:
@@ -307,8 +307,8 @@ the terminal's `git` client. The following can be used:
 
 [source,bash,role=execute]
 ----
-git config --global user.email "%user%@example.com"
-git config --global user.name "%user%"
+git config --global user.email "{user}@example.com"
+git config --global user.name "{user}"
 ----
 
 Then, commit your changes:
@@ -329,14 +329,14 @@ Your Gitea username is:
 
 [source,role=copy]
 ----
-%gitea_user%
+{gitea_user}
 ----
 
 And the password is:
 
 [source,role=copy]
 ----
-%gitea_password%
+{gitea_password}
 ----
 
 Feel free to visit Gitea (using the URL at the beginning of the lab) to see
@@ -351,13 +351,13 @@ tkn pipeline start build-and-deploy-ms \
 -w name=shared-workspace,volumeClaimTemplateFile=pipelines/pipelinepvc.yaml \
 -p deployment-name-p=eda-producer-ms-ep \
 -p deployment-name-c=eda-consumer-ms-ep \
--p git-url=%gitea_console_url%/%user%/cockroach-kafka-eda.git \
--p IMAGE-P=image-registry.openshift-image-registry.svc:5000/%user%-eda/eda-ms-producer \
--p IMAGE-C=image-registry.openshift-image-registry.svc:5000/%user%-eda/eda-ms-consumer \
+-p git-url={gitea_console_url}/{user}/cockroach-kafka-eda.git \
+-p IMAGE-P=image-registry.openshift-image-registry.svc:5000/{user}-eda/eda-ms-producer \
+-p IMAGE-C=image-registry.openshift-image-registry.svc:5000/{user}-eda/eda-ms-consumer \
 -p KAFKA_BROKER='crdb-cluster-kafka-bootstrap.crdb-kafka.svc.cluster.local:9092' \
--p KAFKA_GROUP_ID=%user%-groupid \
--p KAFKA_TOPIC=%user%-topic \
--p KAFKA_CLIENT_ID=%user%-clientid \
+-p KAFKA_GROUP_ID={user}-groupid \
+-p KAFKA_TOPIC={user}-topic \
+-p KAFKA_CLIENT_ID={user}-clientid \
 --use-param-defaults
 ----
 
