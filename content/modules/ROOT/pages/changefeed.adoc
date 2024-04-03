@@ -136,7 +136,7 @@ Make sure you have the Python consumer application's logs showing:
 
 . In the OpenShift web console, ensure you are using the _Developer_ perspective
 . Make sure that you are in the _Topology_ view
-. Select your `%user%-eda` project from the dropdown at the top
+. Select your `{user}-eda` project from the dropdown at the top
 . Click the Python consumer application pod
 . Click the pod name in the right hand navigation, which looks like
 `python-kafka-consumer-696d6fbfbb-cfxw8`
